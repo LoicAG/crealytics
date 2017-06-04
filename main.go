@@ -14,7 +14,7 @@ func main() {
 }
 
 func HealthCheck(c *gin.Context) {
-    //TODO
+    c.String(200, "")
 }
 
 func CreateInstance(c *gin.Context) {

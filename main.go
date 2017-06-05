@@ -49,10 +49,11 @@ func CreateInstance(service *compute.Service) gin.HandlerFunc {
         prefix := "https://www.googleapis.com/compute/v1/projects/" + projectId
         imageURL := "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140606"
         zone := "europe-west1-c"
+        machineType := "f1-micro"
 
         instance := &compute.Instance{
 	    Name: "dummy",
-            MachineType: prefix + "/zones/" + zone + "/machineTypes/f1-micro",
+            MachineType: prefix + "/zones/" + zone + "/machineTypes/" + machineType,
             NetworkInterfaces: []*compute.NetworkInterface{
                 &compute.NetworkInterface{
                     AccessConfigs: []*compute.AccessConfig{

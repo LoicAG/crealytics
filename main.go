@@ -25,7 +25,7 @@ func main() {
 
     httpClient := jwtConfig.Client(nil)
 
-    service, err := compute.New(httpClient) //TODO configure the http.Client
+    service, err := compute.New(httpClient)
     if err != nil {
         panic(err)
     }

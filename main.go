@@ -44,7 +44,7 @@ func HealthCheck(c *gin.Context) {
 func CreateInstance(service *compute.Service) gin.HandlerFunc {
     fn := func(c *gin.Context) {
 
-	//TODO put these parameters in a config file
+        //TODO put these parameters in a config file
         projectId := "crealytics-169710"
         prefix := "https://www.googleapis.com/compute/v1/projects/" + projectId
         imageURL := "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140606"
@@ -52,7 +52,7 @@ func CreateInstance(service *compute.Service) gin.HandlerFunc {
         machineType := "f1-micro"
 
         instance := &compute.Instance{
-	    Name: "dummy",
+            Name: "dummy",
             MachineType: prefix + "/zones/" + zone + "/machineTypes/" + machineType,
             NetworkInterfaces: []*compute.NetworkInterface{
                 &compute.NetworkInterface{
@@ -76,7 +76,7 @@ func CreateInstance(service *compute.Service) gin.HandlerFunc {
                     },
                 },
             },
-	}
+        }
 
         op, err := service.Instances.Insert(projectId, zone, instance).Do()
         fmt.Printf("Got compute.Operation, err: %#v, %v", op, err)

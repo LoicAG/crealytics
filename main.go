@@ -11,6 +11,8 @@ import (
 func main() {
     r := gin.Default()
 
+    // A service account credentials file is expected
+    // https://developers.google.com/identity/protocols/OAuth2ServiceAccount
     configBytes, err := ioutil.ReadFile("./credentials.json")
     if err != nil {
         panic(err)
@@ -31,6 +33,7 @@ func main() {
     r.GET("/healthcheck", HealthCheck)
     r.POST("/v1/instances/create", CreateInstance(service))
 
+    //TODO make port configurable
     r.Run(":8080")
 }
 
@@ -40,6 +43,8 @@ func HealthCheck(c *gin.Context) {
 
 func CreateInstance(service *compute.Service) gin.HandlerFunc {
     fn := func(c *gin.Context) {
+
+	//TODO put these parameters in a config file
         projectId := "crealytics-169710"
         prefix := "https://www.googleapis.com/compute/v1/projects/" + projectId
         imageURL := "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140606"

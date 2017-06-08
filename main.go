@@ -6,6 +6,8 @@ import (
     "github.com/gin-gonic/gin"
     "golang.org/x/oauth2/google"
     "google.golang.org/api/compute/v1"
+    "math/rand"
+    "strconv"
 )
 
 func main() {
@@ -50,9 +52,10 @@ func CreateInstance(service *compute.Service) gin.HandlerFunc {
         imageURL := "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140606"
         zone := "europe-west1-c"
         machineType := "f1-micro"
+        instanceName := "dummy" + strconv.Itoa(rand.Intn(1000))
 
-        instance := &compute.Instance{
-            Name: "dummy",
+        instanceConfig := &compute.Instance{
+            Name: instanceName,
             MachineType: prefix + "/zones/" + zone + "/machineTypes/" + machineType,
             NetworkInterfaces: []*compute.NetworkInterface{
                 &compute.NetworkInterface{
@@ -78,8 +81,24 @@ func CreateInstance(service *compute.Service) gin.HandlerFunc {
             },
         }
 
-        op, err := service.Instances.Insert(projectId, zone, instance).Do()
+        op, err := service.Instances.Insert(projectId, zone, instanceConfig).Do()
         fmt.Printf("Got compute.Operation, err: %#v, %v", op, err)
+
+        if err != nil {
+            panic(err)
+        }
+
+        var instanceIPAddress string
+
+        for instanceIPAddress == "" {
+            instance, err := service.Instances.Get(projectId, zone, instanceName).Do()
+            fmt.Printf("Got compute.Instance, err: %#v, %v", instance, err)
+            networkInterface := instance.NetworkInterfaces[0] // Only one interface per instance is supported
+            instanceIPAddress = networkInterface.NetworkIP
+        }
+
+        c.String(200, instanceIPAddress)
     }
+
     return gin.HandlerFunc(fn)
 }
